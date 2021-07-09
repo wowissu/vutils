@@ -2,14 +2,32 @@
   "name": "@wowissu/vstore",
   "version": "1.0.0",
   "description": "Use Composition API to imitate Vuex in Vue3.",
-  "main": "src/index.js",
-  "types": "types/index.d.ts",
-  "repository": "https://github.com/wowissu/vutils.git",
+  "scripts": {
+    "pub": "yarn publish --access public"
+  },
+  "main": "index.js",
+  "types": "index.d.ts",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/wowissu/vutils.git"
+  },
   "author": "wowissu",
   "license": "MIT",
-  "private": true,
+  "publishConfig": {
+    "access": "public"
+  },
+  "bugs": {
+    "url": "https://github.com/wowissu/vutils/issues"
+  },
+  "homepage": "https://github.com/wowissu/vutils#readme",
+  "keywords": [
+    "vuex",
+    "vue3",
+    "vue"
+  ],
   "dependencies": {
     "typescript": "^4.0.0",
     "vue": "^3.0.0"
-  }
+  },
+  "devDependencies": {}
 }
