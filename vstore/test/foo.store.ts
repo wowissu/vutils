@@ -14,20 +14,20 @@ const genStore = () => createStore(
   }),
 
   // Getter
-  ({state}) => ({
+  ({ state }) => ({
     // get latestTodo() { return state.todos[state.todos.length - 1] },
     foo: computed(() => !state.foo)
   }),
 
   // Mutate
-  ({state, getter}) => ({
+  ({ state, getter }) => ({
     setFoo(val: boolean) {
       state.foo = val;
     }
   }),
 
   // Actions
-  ({state, getter, mutate}) => ({
+  ({ state, getter, mutate }) => ({
     toggleFoo () {
       mutate.setFoo(!state.foo)
     }

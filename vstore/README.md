@@ -2,8 +2,6 @@
 
 Like Vuex, but base on Vue3 composition API.
 
-## How to use
-
 ```typescript
 import { reactive } from 'vue';
 
@@ -20,7 +18,8 @@ export function createStore(
 * `MutateCaller()` state is only writable in mutate methods.
 * `ActionCaller()` the state or mutate both readonly in action methods, call mutate method for change the state.
 
-## Sample
+## How to use
+
 
 ```typescript
 // foo.store.ts
@@ -34,12 +33,12 @@ export const store = createStore(
   }),
 
   // getter caller
-  (state) => ({
+  ({ state }) => ({
     foo: computed(() => !state.foo)
   }),
 
   // mutate caller
-  (state) => {
+  ({ state, getter }) => {
     return {
       setFoo(bar: boolean) {
         state.foo = bar;
@@ -48,7 +47,7 @@ export const store = createStore(
   },
 
   // action caller
-  (state, mutate) => {
+  ({ state, mutate, getter }) => {
     return {
       doAction() {
         mutate.setFoo(!state.foo)
@@ -78,7 +77,7 @@ export const useStore() {
 }
 ```
 
-### How to use in vue
+## In Vue
 
 ```typescript
 import { useStore } from 'foo.store.ts';
