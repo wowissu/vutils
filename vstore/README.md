@@ -5,8 +5,10 @@ Like Vuex, but base on Vue3 composition API.
 ## How to use
 
 ```typescript
+import { reactive } from 'vue';
+
 export function createStore(
-  stateCaller: () => State,
+  stateCaller: () => reactive({ [key: string]: any }),
   mutateCaller: (state) => { [key: string]: () => void },
   actionCaller: (state, mutate) => { [key: string]: () => any }
 )
