@@ -19,7 +19,7 @@
   "bugs": {
     "url": "https://github.com/wowissu/vutils/issues"
   },
-  "homepage": "https://github.com/wowissu/vutils#readme",
+  "homepage": "https://github.com/wowissu/vutils/tree/main/vstore",
   "keywords": [
     "vuex",
     "vue3",
