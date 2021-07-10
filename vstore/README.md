@@ -14,6 +14,10 @@ export function createStore(
 )
 ```
 
+* `StateCaller()` must return **`reactive({ ... })`**
+* `MutateCaller()` state is only writable in mutate methods.
+* `ActionCaller()` the state or mutate both readonly in action methods, call mutate method for change the state.
+
 ## Sample
 
 ```typescript
