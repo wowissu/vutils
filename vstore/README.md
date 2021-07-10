@@ -107,11 +107,11 @@ export default defineComponent({
 })
 ```
 
-## Async mode
-
-Fetch the data before init state.
+## :warning: Async Store
 
 > :warning: **Async stateCaller is unrecommended**. should consider to use async Action method for fetch data and **change state via mutate**
+
+Fetch the data before init state.
 
 ```typescript
 createStore(
