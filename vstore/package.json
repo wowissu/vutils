@@ -1,6 +1,6 @@
 {
   "name": "@wowissu/vstore",
-  "version": "1.0.3",
+  "version": "1.1.0",
   "description": "Use Composition API to imitate Vuex in Vue3.",
   "scripts": {
     "pub": "yarn publish --access public"
