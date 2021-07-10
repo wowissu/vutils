@@ -9,12 +9,14 @@ import { reactive } from 'vue';
 
 export function createStore(
   stateCaller: () => reactive({ [key: string]: any }),
-  mutateCaller: (state) => { [key: string]: () => void },
-  actionCaller: (state, mutate) => { [key: string]: () => any }
+  getterCaller: ({state}) => { [key: string]: any },
+  mutateCaller: ({state, getter}) => { [key: string]: () => void },
+  actionCaller: ({state, getter, mutate}) => { [key: string]: () => any }
 )
 ```
 
 * `StateCaller()` must return **`reactive({ ... })`**
+* `GetterCaller()` recommand return the **`computed(() => 'your getter')`**.
 * `MutateCaller()` state is only writable in mutate methods.
 * `ActionCaller()` the state or mutate both readonly in action methods, call mutate method for change the state.
 
@@ -22,14 +24,18 @@ export function createStore(
 
 ```typescript
 // foo.store.ts
-
-import { reactive } from 'vue';
+import { reactive, computed } from 'vue';
 import { createStore } from '@wowissu/vstore';
 
 export const store = createStore(
   // state caller
   () => reactive({
     foo: false
+  }),
+
+  // getter caller
+  (state) => ({
+    foo: computed(() => !state.foo)
   }),
 
   // mutate caller
@@ -58,30 +64,11 @@ Initialize the store only the first time when `useStore()` is called, and return
 
 ```typescript
 // foo.store.ts
+import { reactive, computed } from 'vue';
+import { createStore } from '@wowissu/vstore';
 
 const makeStore = () => createStore(
-  // state caller
-  () => reactive({
-    foo: false
-  }),
-
-  // mutate caller
-  (state) => {
-    return {
-      setFoo(bar: boolean) {
-        state.foo = bar;
-      }
-    }
-  },
-
-  // action caller
-  (state, mutate) => {
-    return {
-      fetchFooData() {
-        mutate.setFoo(!state.foo)
-      }
-    }
-  }
+  // ... as above ...
 )
 
 let store!: ReturnType<typeof makeStore>
@@ -91,7 +78,7 @@ export const useStore() {
 }
 ```
 
-### Use in vue
+### How to use in vue
 
 ```typescript
 import { useStore } from 'foo.store.ts';
@@ -99,10 +86,15 @@ import { useStore } from 'foo.store.ts';
 export default defineComponent({
   // ...
   setup () {
-    const { state, action } = useStore();
+    const { state, getter, action } = useStore();
+
+    // use computed to watch data
     const foo = computed(() => state.foo)
 
-    return { foo }
+    // or getter
+    const reverseFoo = getter.reverseFoo
+
+    return { foo, reverseFoo }
   }
 })
 ```

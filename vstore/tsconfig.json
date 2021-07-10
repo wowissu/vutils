@@ -1,7 +1,31 @@
 {
   "compilerOptions": {
-    "target": "es5",
-    "composite": true,
-    "declarationMap": true
-  }
+    "target": "esnext",
+    "module": "esnext",
+    "strict": true,
+    "jsx": "preserve",
+    "importHelpers": true,
+    "moduleResolution": "node",
+    "skipLibCheck": true,
+    "esModuleInterop": true,
+    "allowSyntheticDefaultImports": true,
+    "sourceMap": true,
+    "baseUrl": ".",
+    "types": [
+      "webpack-env"
+    ],
+    "lib": [
+      "esnext",
+      "dom",
+      "dom.iterable",
+      "scripthost"
+    ]
+  },
+  "include": [
+    "test/**/*.ts",
+    "test/**/*.vue"
+  ],
+  "exclude": [
+    "node_modules"
+  ]
 }
