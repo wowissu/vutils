@@ -59,9 +59,6 @@ Initialize the store only the first time when `useStore()` is called, and return
 ```typescript
 // foo.store.ts
 
-import { reactive } from 'vue';
-import { createStore } from '@wowissu/vstore';
-
 const makeStore = () => createStore(
   // state caller
   () => reactive({
@@ -97,8 +94,7 @@ export const useStore() {
 ### Use in vue
 
 ```typescript
-import { computed } from 'vue';
-import { useStore } from 'store.ts';
+import { useStore } from 'foo.store.ts';
 
 export default defineComponent({
   // ...
@@ -113,40 +109,23 @@ export default defineComponent({
 
 ## Async mode
 
-Add async before **`state caller`** function
+Fetch the data before init state.
+
+> :warning: **Async stateCaller is unrecommended**. should consider to use async Action method for fetch data and **change state via mutate**
 
 ```typescript
-import { reactive } from 'vue';
-import { createStore } from '@wowissu/vstore';
-
 createStore(
-  // state caller
-  async () => reactive({
-    foo: false
-  }),
+  async () => {
+    const data = await fetchSomeData();
 
-  // mutate caller
-  (state) => {
-    return {
-      setFoo(bar: boolean) {
-        state.foo = bar;
-      }
-    }
-  },
-
-  // action caller
-  (state, mutate) => {
-    return {
-      // async action
-      async doAction() {
-        mutate.setFoo(!state.foo)
-      }
-    }
+    return reactive({
+      data
+    })
   }
 )
 ```
 
-### use in vue on async mode
+### Use in async vue
 
 If you want use Async Component, please use [\<Suspebnse \/\>](https://v3.vuejs.org/guide/migration/suspense.html) component.
 
