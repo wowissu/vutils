@@ -1,9 +1,9 @@
 
 import { createStore } from '../../index';
-import { stateCaller } from 'test/bar/state';
-import { getterCaller } from 'test/bar/getter';
-import { mutateCaller } from 'test/bar/mutate';
-import { actionCaller } from 'test/bar/action';
+import { stateCaller } from './state';
+import { getterCaller } from './getter';
+import { mutateCaller } from './mutate';
+import { actionCaller } from './action';
 
 const genStore = () => createStore(
   stateCaller,

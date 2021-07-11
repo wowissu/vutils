@@ -97,6 +97,100 @@ export default defineComponent({
 })
 ```
 
+## Separate
+
+If like all separate. try below.
+
+```dir
+📦bar
+ ┣ 📜action.ts
+ ┣ 📜getter.ts
+ ┣ 📜index.ts
+ ┣ 📜mutate.ts
+ ┗ 📜state.ts
+```
+
+```typescript
+// bar/index.ts
+
+import { createStore } from '@wowissu/vux';
+import { stateCaller } from './state';
+import { getterCaller } from './getter';
+import { mutateCaller } from './mutate';
+import { actionCaller } from './action';
+
+const genStore = () => createStore(
+  stateCaller,
+  getterCaller,
+  mutateCaller,
+  actionCaller
+);
+
+
+// store into memery
+let store!: ReturnType<typeof genStore>
+
+// export
+export const useBarStore = () => {
+  return store ??= genStore();
+}
+```
+
+```typescript
+// bar/state.ts
+import { reactive } from 'vue'
+
+export type State = ReturnType<typeof stateCaller>;
+
+export const stateCaller = () => reactive({
+  foo: false
+});
+```
+
+```typescript
+// bar/getter.ts
+import { computed } from 'vue';
+import { GetterContext } from '@wowissu/vux';
+import { State } from './state';
+
+export type Getter = ReturnType<typeof getterCaller>;
+
+export const getterCaller = ({ state }: GetterContext<State>) => {
+  return {
+    reverseFoo: computed(() => !state.foo)
+  }
+};
+```
+
+```typescript
+// bar/mutate.ts
+import { MutateContext } from '@wowissu/vux';
+import { Getter } from './getter';
+import { State } from './state';
+
+export type Mutate = ReturnType<typeof mutateCaller>;
+
+export const mutateCaller = ({ state }: MutateContext<State, Getter>) => ({
+  setFoo(val: boolean) {
+    state.foo = val;
+  }
+});
+```
+
+```typescript
+// bar/action.ts
+import { ActionContext } from '@wowissu/vux';
+import { Getter } from './getter';
+import { Mutate } from './mutate';
+import { State } from './state';
+
+export const actionCaller = ({ state, mutate }: ActionContext<State, Getter, Mutate>) => ({
+  toggleFoo () {
+    mutate.setFoo(!state.foo)
+  }
+});
+```
+
 ## :warning: Async Store
 
 > :warning: **Async stateCaller is unrecommended**. should consider to use async Action method for fetch data and **change state via mutate**
