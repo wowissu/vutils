@@ -1,4 +1,3 @@
-// import { createStore } from '@wowissu/vstore';
 import { createStore } from '../index';
 import { reactive, computed } from 'vue'
 

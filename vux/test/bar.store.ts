@@ -1,4 +1,3 @@
-// import { createStore } from '@wowissu/vstore';
 import { ActionContext, createStore, getter, GetterCaller, GetterContext, MutateContext } from '../index';
 import { reactive, computed } from 'vue'
 
