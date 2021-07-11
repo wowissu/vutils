@@ -20,7 +20,6 @@ export function createStore(
 
 ## How to use
 
-
 ```typescript
 // foo.store.ts
 import { reactive, computed } from 'vue';

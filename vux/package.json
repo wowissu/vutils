@@ -1,5 +1,5 @@
 {
-  "name": "@wowissu/vstore",
+  "name": "@wowissu/vux",
   "version": "1.1.1",
   "description": "Use Composition API to imitate Vuex in Vue3.",
   "scripts": {

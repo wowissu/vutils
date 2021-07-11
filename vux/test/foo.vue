@@ -15,7 +15,7 @@ export default defineComponent({
   async setup () {
     const { getter, action } = useFooStore();
 
-    return { foo: getter.foo,  toggleFoo: action.toggleFoo }
+    return { foo: getter.reverseFoo,  toggleFoo: action.toggleFoo }
   }
 })
 </script>
