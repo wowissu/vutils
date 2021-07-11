@@ -1,4 +1,4 @@
-# @wowissu/vstore
+# @wowissu/vux
 
 Like Vuex, but base on Vue3 composition API.
 
@@ -23,7 +23,7 @@ export function createStore(
 ```typescript
 // foo.store.ts
 import { reactive, computed } from 'vue';
-import { createStore } from '@wowissu/vstore';
+import { createStore } from '@wowissu/vux';
 
 export const store = createStore(
   // state caller
@@ -63,7 +63,7 @@ Initialize the store only the first time when `useStore()` is called, and return
 ```typescript
 // foo.store.ts
 import { reactive, computed } from 'vue';
-import { createStore } from '@wowissu/vstore';
+import { createStore } from '@wowissu/vux';
 
 const makeStore = () => createStore(
   // ... as above ...
