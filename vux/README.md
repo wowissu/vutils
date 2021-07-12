@@ -1,5 +1,8 @@
 # @wowissu/vux
 
+![vue](https://img.shields.io/github/package-json/dependency-version/wowissu/vutils/vue?filename=vux%2Fpackage.json)
+![typescript](https://img.shields.io/github/package-json/dependency-version/wowissu/vutils/typescript?filename=vux%2Fpackage.json)
+
 Like Vuex, but base on Vue3 composition API.
 
 ```typescript
@@ -66,6 +69,10 @@ import { reactive, computed } from 'vue';
 import { createStore } from '@wowissu/vux';
 
 const makeStore = () => createStore(
+  // state caller
+  () => reactive({
+    foo: false
+  }),
   // ... as above ...
 )
 
@@ -127,7 +134,7 @@ const genStore = () => createStore(
 );
 
 
-// store into memery
+// store into memory
 let store!: ReturnType<typeof genStore>
 
 // export
@@ -199,6 +206,7 @@ Fetch the data before init state.
 
 ```typescript
 createStore(
+  // async state caller
   async () => {
     const data = await fetchSomeData();
 
