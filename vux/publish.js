@@ -33,9 +33,12 @@ process.stdin.on('readable', () => {
 
   if (input !== null) {
     if (input === pkg.version) {
+      console.log(`yarn publish --access public --no-git-tag-version --no-commit-hooks --new-version ${pkg.version}`);
+
       const stdout = execSync(`yarn publish --access public --no-git-tag-version --no-commit-hooks --new-version ${pkg.version}`);
 
-      console.log(stdout);
+      console.log(`publish: ${stdout}`);
+      gitHandler();
 
     } else {
       process.exit(1);
@@ -44,8 +47,6 @@ process.stdin.on('readable', () => {
 });
 
 function gitHandler() {
-
-
   execSync(`git add .`);
   execSync(`git ci -m "${tagLabel}"`);
   execSync(`git tag -a "${tagLabel}" -m "${tagLabel}"`);
