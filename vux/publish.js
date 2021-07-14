@@ -33,8 +33,6 @@ process.stdin.on('readable', () => {
 
   if (input !== null) {
     if (input === pkg.version) {
-      console.log(`yarn publish --access public --no-git-tag-version --no-commit-hooks --new-version ${pkg.version}`);
-
       const stdout = execSync(`yarn publish --access public --no-git-tag-version --no-commit-hooks --new-version ${pkg.version}`);
 
       console.log(`publish: ${stdout}`);
