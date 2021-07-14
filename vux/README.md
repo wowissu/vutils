@@ -36,7 +36,7 @@ export const store = createStore(
 
   // getter caller
   ({ state }) => ({
-    foo: computed(() => !state.foo)
+    reverseFoo: computed(() => !state.foo)
   }),
 
   // mutate caller
@@ -69,10 +69,6 @@ import { reactive, computed } from 'vue';
 import { createStore } from '@wowissu/vux';
 
 const makeStore = () => createStore(
-  // state caller
-  () => reactive({
-    foo: false
-  }),
   // ... as above ...
 )
 
