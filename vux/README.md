@@ -40,22 +40,18 @@ export const store = createStore(
   }),
 
   // mutate caller
-  ({ state, getter }) => {
-    return {
-      setFoo(bar: boolean) {
-        state.foo = bar;
-      }
+  ({ state, getter }) => ({
+    setFoo(bar: boolean) {
+      state.foo = bar;
     }
-  },
+  }),
 
   // action caller
-  ({ state, mutate, getter }) => {
-    return {
-      doAction() {
-        mutate.setFoo(!state.foo)
-      }
+  ({ state, mutate, getter }) => ({
+    doAction() {
+      mutate.setFoo(!state.foo)
     }
-  }
+  })
 )
 ```
 
@@ -158,11 +154,9 @@ import { State } from './state';
 
 export type Getter = ReturnType<typeof getterCaller>;
 
-export const getterCaller = ({ state }: GetterContext<State>) => {
-  return {
-    reverseFoo: computed(() => !state.foo)
-  }
-};
+export const getterCaller = ({ state }: GetterContext<State>) => ({
+  reverseFoo: computed(() => !state.foo)
+});
 ```
 
 ```typescript
@@ -196,7 +190,7 @@ export const actionCaller = ({ state, mutate }: ActionContext<State, Getter, Mut
 
 ## :warning: Async Store
 
-> :warning: **Async stateCaller is unrecommended**. should consider to use async Action method for fetch data and **change state via mutate**
+> :warning: **Async stateCaller is unrecommended**. should consider to use **async Action method** for fetch data and **change the state via mutate** at first.
 
 Fetch the data before init state.
 
@@ -215,7 +209,7 @@ createStore(
 
 ### Use in async vue
 
-If you want use Async Component, please wraper with [\<suspebnse \/\>](https://v3.vuejs.org/guide/migration/suspense.html) component.
+If you want use Async Component, please wrap with [\<suspebnse \/\>](https://v3.vuejs.org/guide/migration/suspense.html) component.
 
 ```typescript
 import { computed } from 'vue';
