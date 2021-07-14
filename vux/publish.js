@@ -17,40 +17,12 @@ const argv = yargs(hideBin(process.argv))
   .option('prerelease', { desc: '1.0.0-0 => 1.0.0-1', coerce(val) { v = val ? '--prerelease' : v; return val; } })
   .argv
 
-const yarnVersionCmd = `yarn version ${v} --no-git-tag-version --no-commit-hooks`
+const stdout = execSync(`yarn publish --access public ${v} --no-git-tag-version --no-commit-hooks`);
+const pkg = require('./package.json')
 
+resolve({ tagLabel: `${pkg.name}-v${pkg.version}` });
 
-yarnVersion().then(({ tagLabel }) => gitHandler(tagLabel))
+execSync(`git add .`);
+execSync(`git ci -m "${tagLabel}"`);
+execSync(`git tag -a "${tagLabel}" -m "${tagLabel}"`);
 
-
-function yarnVersion() {
-  return new Promise((resolve, reject) => {
-    console.log(`exec: ${yarnVersionCmd}`);
-    // yarn version
-    exec(yarnVersionCmd, (err, stdout, stderr) => {
-      if (err) {
-        reject(err);
-        return;
-      }
-
-      if (stderr) {
-        reject(new Error(stderr));
-        return;
-      }
-
-      console.log(`${stdout}`);
-
-      const pkg = require('./package.json')
-
-      resolve({ tagLabel: `${pkg.name}-v${pkg.version}` });
-    })
-  })
-}
-
-function gitHandler(tagLabel) {
-  return new Promise((resolve) => {
-    execSync(`git add .`);
-    execSync(`git ci -m "${tagLabel}"`);
-    execSync(`git tag -a "${tagLabel}" -m "${tagLabel}"`);
-  })
-}
