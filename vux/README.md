@@ -87,12 +87,12 @@ import { useStore } from 'foo.store.ts';
 export default defineComponent({
   // ...
   setup () {
-    const { state, getter, action } = useStore();
+    const { state, getter } = useStore();
 
     // use computed to watch data
     const foo = computed(() => state.foo)
 
-    // or getter
+    // or return the getter which already wrap by computed
     const reverseFoo = getter.reverseFoo
 
     return { foo, reverseFoo }
@@ -215,7 +215,7 @@ createStore(
 
 ### Use in async vue
 
-If you want use Async Component, please use [\<Suspebnse \/\>](https://v3.vuejs.org/guide/migration/suspense.html) component.
+If you want use Async Component, please wraper with [\<suspebnse \/\>](https://v3.vuejs.org/guide/migration/suspense.html) component.
 
 ```typescript
 import { computed } from 'vue';
