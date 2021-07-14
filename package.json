@@ -1,6 +1,6 @@
 {
   "scripts": {
-    "pub:vux": "node publish.js vux"
+    "pub:vux": "node publish.js ./vux"
   },
   "license": "MIT",
   "devDependencies": {

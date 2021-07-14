@@ -19,12 +19,9 @@ const opts = {
   prerelease: { type: 'boolean', desc: '1.0.0-0 => 1.0.0-1', coerce(val) { action = val ? '--prerelease' : action; return val; } }
 }
 
-yargs(hideBin(process.argv))
-  .command('vux', "Publish @wowissu/vux", (argv) => {
-    argv
-      .positional('cwd', { default: path.resolve(__dirname, 'vux') })
-      .options(opts)
-  })
+const argv = yargs(hideBin(process.argv))
+  .positional('cwd', { default: path.resolve(__dirname, 'vux') })
+  .options(opts)
   .showHelpOnFail(true)
   .demandCommand(1)
   .check((argv) => {
@@ -78,5 +75,5 @@ function gitHandler(execOpts) {
   execSync(`git ci -m "${tagLabel}"`, execOpts);
   execSync(`git tag -a "${tagLabel}" -m "${tagLabel}"`, execOpts);
 
-  console.log(`git add commit & tag "${tagLabel}"`);
+  console.log(chalk`git add commit & tag "${tagLabel}"`);
 }
