@@ -7,29 +7,31 @@ const { execSync } = require('child_process');
 // --patch ... --prerelease
 let action = ""
 
-yargs(hideBin(process.argv))
-  .option('major', { type: 'boolean', desc: '1.0.0 => 1.0.1', coerce(val) { action = val ? '--major' : action; return val; } })
-  .option('minor', { type: 'boolean', desc: '1.0.0 => 1.1.0', coerce(val) { action = val ? '--minor' : action; return val; } })
-  .option('patch', { type: 'boolean', desc: '1.0.0 => 1.0.1', coerce(val) { action = val ? '--patch' : action; return val; } })
-  .option('premajor', { type: 'boolean', desc: '1.0.0-0 => 1.0.1-0', coerce(val) { action = val ? '--premajor' : action; return val; } })
-  .option('preminor', { type: 'boolean', desc: '1.0.0-0 => 1.1.0-0', coerce(val) { action = val ? '--preminor' : action; return val; } })
-  .option('prepatch', { type: 'boolean', desc: '1.0.0-0 => 1.0.1-0', coerce(val) { action = val ? '--prepatch' : action; return val; } })
-  .option('prerelease', { type: 'boolean', desc: '1.0.0-0 => 1.0.0-1', coerce(val) { action = val ? '--prerelease' : action; return val; } })
-  .showHelpOnFail(true)
-  .demandCommand(1)
-  .argv
-
-if (action === "") {
-  console.error('version tag missing.')
-  process.exit(1);
+const opts = {
+  major: { type: 'boolean', desc: '1.0.0 => 1.0.1', coerce(val) { action = val ? '--major' : action; return val; } },
+  minor: { type: 'boolean', desc: '1.0.0 => 1.1.0', coerce(val) { action = val ? '--minor' : action; return val; } },
+  patch: { type: 'boolean', desc: '1.0.0 => 1.0.1', coerce(val) { action = val ? '--patch' : action; return val; } },
+  premajor: { type: 'boolean', desc: '1.0.0-0 => 1.0.1-0', coerce(val) { action = val ? '--premajor' : action; return val; } },
+  preminor: { type: 'boolean', desc: '1.0.0-0 => 1.1.0-0', coerce(val) { action = val ? '--preminor' : action; return val; } },
+  prepatch: { type: 'boolean', desc: '1.0.0-0 => 1.0.1-0', coerce(val) { action = val ? '--prepatch' : action; return val; } },
+  prerelease: { type: 'boolean', desc: '1.0.0-0 => 1.0.0-1', coerce(val) { action = val ? '--prerelease' : action; return val; } }
 }
+
+yargs(hideBin(process.argv))
+  .usage('--patch ... --prerelease to update the version. and gen git commit & tag.')
+  .options(opts)
+  .showHelpOnFail(true)
+  // .conflicts('major', 'minor', 'patch', 'premajor', 'preminor', 'prepatch', 'prerelease')
+  .check((argv) => {
+    return Object.keys(opts).some((optKey) => {
+      return argv[optKey] === true
+    }) || chalk.redBright`Please pick one version option. \n`;
+  })
+  .argv
 
 const stdout = execSync(`yarn version ${action} --no-git-tag-version --no-commit-hooks`);
 const pkg = require('./package.json');
 const tagLabel = `${pkg.name}-v${pkg.version}`;
-
-console.log(`stdout: ${stdout}`);
-
 
 process.stdin.setEncoding('utf-8');
 
@@ -56,5 +58,5 @@ function gitHandler() {
   execSync(`git ci -m "${tagLabel}"`);
   execSync(`git tag -a "${tagLabel}" -m "${tagLabel}"`);
 
-  console.log(`tagLabel: ${tagLabel}`);
+  console.log(`git add commit & tag "${tagLabel}"`);
 }
