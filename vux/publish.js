@@ -7,15 +7,22 @@ const { execSync } = require('child_process');
 // --patch ... --prerelease
 let action = ""
 
-const argv = yargs(hideBin(process.argv))
-  .option('major', { desc: '1.0.0 => 1.0.1', coerce(val) { action = val ? '--major' : action; return val; } })
-  .option('minor', { desc: '1.0.0 => 1.1.0', coerce(val) { action = val ? '--minor' : action; return val; } })
-  .option('patch', { desc: '1.0.0 => 1.0.1', coerce(val) { action = val ? '--patch' : action; return val; } })
-  .option('premajor', { desc: '1.0.0-0 => 1.0.1-0', coerce(val) { action = val ? '--premajor' : action; return val; } })
-  .option('preminor', { desc: '1.0.0-0 => 1.1.0-0', coerce(val) { action = val ? '--preminor' : action; return val; } })
-  .option('prepatch', { desc: '1.0.0-0 => 1.0.1-0', coerce(val) { action = val ? '--prepatch' : action; return val; } })
-  .option('prerelease', { desc: '1.0.0-0 => 1.0.0-1', coerce(val) { action = val ? '--prerelease' : action; return val; } })
+yargs(hideBin(process.argv))
+  .option('major', { type: 'boolean', desc: '1.0.0 => 1.0.1', coerce(val) { action = val ? '--major' : action; return val; } })
+  .option('minor', { type: 'boolean', desc: '1.0.0 => 1.1.0', coerce(val) { action = val ? '--minor' : action; return val; } })
+  .option('patch', { type: 'boolean', desc: '1.0.0 => 1.0.1', coerce(val) { action = val ? '--patch' : action; return val; } })
+  .option('premajor', { type: 'boolean', desc: '1.0.0-0 => 1.0.1-0', coerce(val) { action = val ? '--premajor' : action; return val; } })
+  .option('preminor', { type: 'boolean', desc: '1.0.0-0 => 1.1.0-0', coerce(val) { action = val ? '--preminor' : action; return val; } })
+  .option('prepatch', { type: 'boolean', desc: '1.0.0-0 => 1.0.1-0', coerce(val) { action = val ? '--prepatch' : action; return val; } })
+  .option('prerelease', { type: 'boolean', desc: '1.0.0-0 => 1.0.0-1', coerce(val) { action = val ? '--prerelease' : action; return val; } })
+  .showHelpOnFail(true)
+  .demandCommand(1)
   .argv
+
+if (action === "") {
+  console.error('version tag missing.')
+  process.exit(1);
+}
 
 const stdout = execSync(`yarn version ${action} --no-git-tag-version --no-commit-hooks`);
 const pkg = require('./package.json');
