@@ -1,6 +1,8 @@
 #!/usr/bin/env node
 const yargs = require('yargs/yargs');
 const chalk = require('chalk');
+const path = require('path');
+const fs = require('fs');
 const { hideBin } = require('yargs/helpers')
 const { execSync } = require('child_process');
 
@@ -18,19 +20,39 @@ const opts = {
 }
 
 yargs(hideBin(process.argv))
-  .usage('--patch ... --prerelease to update the version. and gen git commit & tag.')
-  .options(opts)
+  .command('vux', "Publish @wowissu/vux", (argv) => {
+    argv
+      .positional('cwd', { default: path.resolve(__dirname, 'vux') })
+      .options(opts)
+  })
   .showHelpOnFail(true)
-  // .conflicts('major', 'minor', 'patch', 'premajor', 'preminor', 'prepatch', 'prerelease')
+  .demandCommand(1)
   .check((argv) => {
-    return Object.keys(opts).some((optKey) => {
+
+    // check cwd path
+    if (!argv.cwd || !fs.existsSync(argv.cwd)) {
+      return chalk.yellow`<!> Working dir "${argv.cwd}" is not exists. \n`;
+    }
+
+    // check version option
+    const hasVersionOpt = Object.keys(opts).some((optKey) => {
       return argv[optKey] === true
-    }) || chalk.redBright`Please pick one version option. \n`;
+    })
+
+    if (hasVersionOpt === false) {
+      return chalk.yellow`<!> Please pick one version option. \n`;
+    }
+
+    return true;
   })
   .argv
 
-const stdout = execSync(`yarn version ${action} --no-git-tag-version --no-commit-hooks`);
-const pkg = require('./package.json');
+const execCommonOpt = { cwd: argv.cwd }
+const packageJsonPath = path.join(argv.cwd, 'package.json');
+
+execSync(`yarn version ${action} --no-git-tag-version --no-commit-hooks`, execCommonOpt);
+
+const pkg = require(packageJsonPath);
 const tagLabel = `${pkg.name}-v${pkg.version}`;
 
 process.stdin.setEncoding('utf-8');
@@ -40,23 +62,21 @@ process.stdout.write(chalk`\n{bold.yellow Confirm！} 再次輸入版本號碼 {
 process.stdin.on('readable', () => {
   const input = process.stdin.read().trim();
 
-  if (input !== null) {
-    if (input === pkg.version) {
-      const stdout = execSync(`yarn publish --access public --no-git-tag-version --no-commit-hooks --new-version ${pkg.version}`);
+  if (input !== null && input === pkg.version) {
+    gitHandler(execCommonOpt);
 
-      console.log(`publish: ${stdout}`);
-      gitHandler();
+    const stdout = execSync(`yarn publish --access public --no-git-tag-version --no-commit-hooks --new-version ${pkg.version}`, execCommonOpt);
 
-    } else {
-      process.exit(1);
-    }
+    console.log(`${stdout}`);
+  } else {
+    process.exit(1);
   }
 });
 
-function gitHandler() {
-  execSync(`git add .`);
-  execSync(`git ci -m "${tagLabel}"`);
-  execSync(`git tag -a "${tagLabel}" -m "${tagLabel}"`);
+function gitHandler(execOpts) {
+  execSync(`git add .`, execOpts);
+  execSync(`git ci -m "${tagLabel}"`, execOpts);
+  execSync(`git tag -a "${tagLabel}" -m "${tagLabel}"`, execOpts);
 
   console.log(`git add commit & tag "${tagLabel}"`);
 }

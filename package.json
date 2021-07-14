@@ -1,0 +1,10 @@
+{
+  "scripts": {
+    "pub:vux": "node publish.js vux"
+  },
+  "license": "MIT",
+  "devDependencies": {
+    "chalk": "^4.1.1",
+    "yargs": "^17.0.1"
+  }
+}
