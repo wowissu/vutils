@@ -19,13 +19,9 @@ const argv = yargs(hideBin(process.argv))
 
 const yarnVersionCmd = `yarn version ${v} --no-git-tag-version --no-commit-hooks`
 
-(async () => {
 
-  const { tagLabel } = await yarnVersion();
+yarnVersion().then(({ tagLabel }) => gitHandler(tagLabel))
 
-  gitHandler(tagLabel);
-
-})()
 
 function yarnVersion() {
   return new Promise((resolve, reject) => {
