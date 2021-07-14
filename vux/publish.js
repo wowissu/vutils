@@ -1,8 +1,7 @@
 #!/usr/bin/env node
 const yargs = require('yargs/yargs')
 const { hideBin } = require('yargs/helpers')
-const { exec, execSync } = require('child_process');
-const { EOL } = require('os');
+const { execSync } = require('child_process');
 
 // --patch ... --prerelease
 let v = ""
@@ -18,9 +17,11 @@ const argv = yargs(hideBin(process.argv))
   .argv
 
 const stdout = execSync(`yarn publish --access public ${v} --no-git-tag-version --no-commit-hooks`);
-const pkg = require('./package.json')
+const pkg = require('./package.json');
+const tagLabel = `${pkg.name}-v${pkg.version}`;
 
-resolve({ tagLabel: `${pkg.name}-v${pkg.version}` });
+console.log(`stdout: ${stdout}`);
+console.log(`tagLabel: ${tagLabel}`);
 
 execSync(`git add .`);
 execSync(`git ci -m "${tagLabel}"`);
